@@ -17,7 +17,7 @@ const render = (container, template, place) => {
 };
 
 render(siteNavigationElement, createSiteMenuTemplate(), 'beforeend');
-render(tripMainElement, createTripInfoTemplate(), 'afterbegin')
+render(tripMainElement, createTripInfoTemplate(), 'afterbegin');
 render(filtersElement, createFiltersTemplate(), 'beforeend');
 render(tripEventsElement, createSortingTemplate(), 'beforeend');
 render(tripEventsElement, createEventListTemplate(), 'beforeend');
