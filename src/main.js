@@ -6,11 +6,16 @@ import { createEventListTemplate } from './view/event-list.js';
 import { createAddEventTemplate } from './view/new-event.js';
 import { createEditEventTemplate } from './view/editable-event.js';
 import { createRoutePointTemplate } from './view/route-point.js';
+import { generatePoint } from './mock/route-point.js';
+
+const POINT_COUNT = 10;
 
 const siteNavigationElement = document.querySelector('.trip-controls__navigation');
 const tripMainElement = document.querySelector('.trip-main');
 const filtersElement = document.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
+
+const points = new Array(POINT_COUNT).fill().map(generatePoint);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -26,6 +31,6 @@ const tripEventsListElement = document.querySelector('.trip-events__list');
 
 render(tripEventsListElement, createEditEventTemplate(), 'beforeend');
 render(tripEventsListElement, createAddEventTemplate(), 'beforeend');
-for (let i = 0; i < 3; i++) {
-  render(tripEventsListElement, createRoutePointTemplate(), 'beforeend');
+for (let i = 0; i < POINT_COUNT; i++) {
+  render(tripEventsListElement, createRoutePointTemplate(points[i]), 'beforeend');
 }
