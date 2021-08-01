@@ -68,22 +68,27 @@ const offers = [
   {
     title: 'Add luggage',
     price: getRandomInteger(0, 100),
+    isChecked: false,
   },
   {
     title: 'Switch to comfort',
     price: getRandomInteger(0, 100),
+    isChecked: false,
   },
   {
     title: 'Add meal',
     price: getRandomInteger(0, 100),
+    isChecked: false,
   },
   {
     title: 'Choose seats',
     price: getRandomInteger(0, 100),
+    isChecked: false,
   },
   {
     title: 'Travel by train',
     price: getRandomInteger(0, 100),
+    isChecked: false,
   },
 ];
 
@@ -98,6 +103,7 @@ const generateOffers = () => {
     offer.offer = [];
     for (let i = 0; i < offers.length; i++) {
       if (getRandomInteger()) {
+        offers[i].isChecked = Boolean(getRandomInteger());
         offer.offer.push(offers[i]);
       }
     }
@@ -131,17 +137,6 @@ const generateDestination = () => {
   });
 };
 
-const getRandomDestination = () => destinationsArray[getRandomInteger(0, destinationNames.length)];
-
-const getOffers = (type) => {
-  for (const offerObject of offerArray) {
-    if (offerObject.type === type) {
-      return offerObject.offer;
-    }
-  }
-  return undefined;
-};
-
 const generateDate = () => {
   const maxDaysGap = 1;
   const maxHoursGap = 1;
@@ -153,10 +148,25 @@ const generateDate = () => {
   return dayjs().add(daysGap, 'day').add(hoursGap, 'hour').add(minutesGap, 'minute');
 };
 
+const getRandomDestination = () => destinationsArray[getRandomInteger(0, destinationNames.length)];
+
+const getOffers = (type) => {
+  for (const offerObject of offerArray) {
+    if (offerObject.type === type) {
+      return offerObject.offer;
+    }
+  }
+  return undefined;
+};
+
+const getRoutePointTypes = () => routePointTypes;
+
+const getDestinationNames = () => destinationNames;
+
 generateDestination();
 generateOffers();
 
-export const generatePoint = () => {
+const generatePoint = () => {
   const routePointType = generateRoutePointType();
   const dateFirst = generateDate();
   const dateSecond = generateDate();
@@ -172,3 +182,5 @@ export const generatePoint = () => {
     type: routePointType,
   };
 };
+
+export { generatePoint, getRoutePointTypes, getDestinationNames, getOffers };
