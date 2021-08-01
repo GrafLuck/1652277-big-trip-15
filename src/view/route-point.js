@@ -1,11 +1,5 @@
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-
-dayjs.extend(duration);
-
-const HOURS_PER_DAY = 24;
-const MINUTES_PER_HOUR = 60;
-const MINUTES_PER_DAY = 1440;
+import { formatDate, formatDuration } from '@/utils.js';
+import { DateFormat } from '@/const.js';
 
 const createListOffers = (offers) => {
 
@@ -25,36 +19,6 @@ const createListOffers = (offers) => {
   return eventList.outerHTML;
 };
 
-const formatDate = (date) => dayjs(date).format('YYYY-MM-DD');
-
-const formatTime = (date) => dayjs(date).format('HH:mm');
-
-const formatFullDate = (date) => `${formatDate(date)}T${formatTime(date)}`;
-
-const formatShortDate = (date) => dayjs(date).format('MMM DD');
-
-const formatDurationEvent = (dateFrom, dateTo) => {
-  const durationInMinutes = dateTo.diff(dateFrom, 'minute');
-  let dateFormat = '';
-  let days = 0;
-  let hours = 0;
-  let minutes = 0;
-  if (durationInMinutes < MINUTES_PER_HOUR) {
-    dateFormat = 'mm[M]';
-    minutes = durationInMinutes;
-  } else if (durationInMinutes < MINUTES_PER_DAY) {
-    dateFormat = 'HH[H] mm[M]';
-    hours = Math.floor(durationInMinutes / MINUTES_PER_HOUR);
-    minutes = durationInMinutes % MINUTES_PER_HOUR;
-  } else {
-    dateFormat = 'DD[D] HH[H] mm[M]';
-    days = Math.floor(durationInMinutes / MINUTES_PER_DAY);
-    hours = Math.floor(durationInMinutes / MINUTES_PER_HOUR) - days * HOURS_PER_DAY;
-    minutes = durationInMinutes - days * MINUTES_PER_DAY - hours * MINUTES_PER_HOUR;
-  }
-  return dayjs.duration({ minutes: minutes, hours: hours, days: days }).format(dateFormat);
-};
-
 export const createRoutePointTemplate = (point) => {
 
   const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } = point;
@@ -63,18 +27,18 @@ export const createRoutePointTemplate = (point) => {
 
   return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="${formatDate(dateFrom)}">${formatShortDate(dateFrom)}</time>
+      <time class="event__date" datetime="${formatDate(dateFrom, DateFormat.ONLY_DATE_MAIN)}">${formatDate(dateFrom, DateFormat.ONLY_DATE_SECONDARY)}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
       </div>
       <h3 class="event__title">${type} ${name}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${formatFullDate(dateFrom)}">${formatTime(dateFrom)}</time>
+          <time class="event__start-time" datetime="${formatDate(dateFrom, DateFormat.DATETIME_ATTRIBUTE)}">${formatDate(dateFrom, DateFormat.ONLY_TIME)}</time>
           &mdash;
-          <time class="event__end-time" datetime="${formatFullDate(dateTo)}">${formatTime(dateTo)}</time>
+          <time class="event__end-time" datetime="${formatDate(dateTo, DateFormat.DATETIME_ATTRIBUTE)}">${formatDate(dateTo, DateFormat.ONLY_TIME)}</time>
         </p>
-        <p class="event__duration">${formatDurationEvent(dateFrom, dateTo)}</p>
+        <p class="event__duration">${formatDuration(dateFrom, dateTo)}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
