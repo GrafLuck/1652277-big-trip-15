@@ -1,4 +1,4 @@
-import { getRoutePointTypes, getDestinationNames, getOffers } from '@mock/route-point.js';
+import { getRoutePointTypes, getDestinationNames } from '@mock/route-point.js';
 import { formatDate } from '@/utils.js';
 import { DateFormat } from '@/const.js';
 
@@ -24,13 +24,24 @@ const createDestinationsName = () => {
   return list;
 };
 
-const createOffers = (offers) => {
+const checkEntry = (key, value, arrayOfObjects) => {
+  let isFound = false;
+  arrayOfObjects.forEach((object) => {
+    if (object[key] === value) {
+      isFound = true;
+    }
+  });
+  return isFound;
+};
+
+const createOffers = (allOffers, checkedOffers) => {
   let list = '';
-  for (const offer of offers) {
+  for (const offer of allOffers) {
     const lastWordOfTitle = offer.title.split(' ').pop();
+    const isChecked = checkEntry('title', offer['title'], checkedOffers);
     list +=
       `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${lastWordOfTitle}-1" type="checkbox" name="event-offer-${lastWordOfTitle}" ${offer.isChecked ? 'checked' : ''}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${lastWordOfTitle}-1" type="checkbox" name="event-offer-${lastWordOfTitle}" ${isChecked ? 'checked' : ''}>
       <label class="event__offer-label" for="event-offer-${lastWordOfTitle}-1">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -41,13 +52,12 @@ const createOffers = (offers) => {
   return list;
 };
 
-const createSectionOffers = (type) => {
-  const offers = getOffers(type);
-  if (offers.length !== 0) {
+const createSectionOffers = (allOffers, checkedOffers) => {
+  if (allOffers.length !== 0) {
     return `<section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${createOffers(offers)}
+          ${createOffers(allOffers, checkedOffers)}
         </div>
       </section>`;
   }
@@ -64,21 +74,28 @@ const createPictures = (pictures) => {
   return list;
 };
 
-const createDestination = (destination) => `
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            ${createDescription(destination.description)}
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-                ${createPictures(destination.pictures)}
-              </div>
-            </div>
-          </section>`;
+const createDestination = (destination) => {
+  const { description, pictures } = destination;
+  if (description.length === 0 && pictures.length === 0) {
+    return '';
+  } else {
+    return `
+      <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${createDescription(description)}
+        <div class="event__photos-container">
+          <div class="event__photos-tape">
+            ${createPictures(pictures)}
+          </div>
+        </div>
+      </section>`;
+  }
+};
 
-export const createEditEventTemplate = (point) => {
+export const createEditEventTemplate = (point, allOffers, isEditEvent = true) => {
 
-  const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } = point;
-  const { name, description, pictures } = destination;
+  const { basePrice, dateFrom, dateTo, destination, offers, type } = point;
+  const { name } = destination;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -123,12 +140,13 @@ export const createEditEventTemplate = (point) => {
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        ${isEditEvent ? `
+              <button button class="event__rollup-btn" type = "button" >
+                <span class="visually-hidden">Open event</span>
+              </button >` : ''}
       </header>
       <section class="event__details">
-        ${createSectionOffers(type)}
+        ${createSectionOffers(allOffers, offers)}
         ${createDestination(destination)}
       </section>
     </form>

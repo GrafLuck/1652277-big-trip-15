@@ -68,33 +68,26 @@ const offers = [
   {
     title: 'Add luggage',
     price: getRandomInteger(0, 100),
-    isChecked: false,
   },
   {
     title: 'Switch to comfort',
     price: getRandomInteger(0, 100),
-    isChecked: false,
   },
   {
     title: 'Add meal',
     price: getRandomInteger(0, 100),
-    isChecked: false,
   },
   {
     title: 'Choose seats',
     price: getRandomInteger(0, 100),
-    isChecked: false,
   },
   {
     title: 'Travel by train',
     price: getRandomInteger(0, 100),
-    isChecked: false,
   },
 ];
 
 const generateRoutePointType = () => routePointTypes[getRandomInteger(0, routePointTypes.length - 1)];
-
-//const generateNameOfDestination = () => destinationNames[getRandomInteger(0, destinationNames.length - 1)];
 
 const generateOffers = () => {
   routePointTypes.forEach((routePointType) => {
@@ -103,7 +96,6 @@ const generateOffers = () => {
     offer.offer = [];
     for (let i = 0; i < offers.length; i++) {
       if (getRandomInteger()) {
-        offers[i].isChecked = Boolean(getRandomInteger());
         offer.offer.push(offers[i]);
       }
     }
@@ -150,13 +142,18 @@ const generateDate = () => {
 
 const getRandomDestination = () => destinationsArray[getRandomInteger(0, destinationNames.length)];
 
-const getOffers = (type) => {
+const getOffers = (type, isChecked = true) => {
+  const checkedOffer = [];
   for (const offerObject of offerArray) {
     if (offerObject.type === type) {
-      return offerObject.offer;
+      offerObject.offer.forEach((offer) => {
+        if (!isChecked || getRandomInteger(0, 1)) {
+          checkedOffer.push(offer);
+        }
+      });
     }
   }
-  return undefined;
+  return checkedOffer;
 };
 
 const getRoutePointTypes = () => routePointTypes;
