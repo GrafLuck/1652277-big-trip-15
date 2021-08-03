@@ -140,7 +140,7 @@ const generateDate = () => {
   return dayjs().add(daysGap, 'day').add(hoursGap, 'hour').add(minutesGap, 'minute');
 };
 
-const getRandomDestination = () => destinationsArray[getRandomInteger(0, destinationNames.length)];
+const getRandomDestination = () => destinationsArray[getRandomInteger(0, destinationNames.length - 1)];
 
 const getOffers = (type, isChecked = true) => {
   const checkedOffer = [];
@@ -159,6 +159,8 @@ const getOffers = (type, isChecked = true) => {
 const getRoutePointTypes = () => routePointTypes;
 
 const getDestinationNames = () => destinationNames;
+
+const getDestinations = () => destinationsArray;
 
 generateDestination();
 generateOffers();
@@ -180,4 +182,4 @@ const generatePoint = () => {
   };
 };
 
-export { generatePoint, getRoutePointTypes, getDestinationNames, getOffers };
+export { generatePoint, getRoutePointTypes, getDestinationNames, getDestinations, getOffers };

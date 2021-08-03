@@ -1,10 +1,13 @@
-import { getRoutePointTypes, getDestinationNames } from '@mock/route-point.js';
+import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } from '@mock/route-point.js';
 import { formatDate } from '@/utils.js';
 import { DateFormat } from '@/const.js';
 
 const createRoutePointTypes = (type) => {
   const routePointTypes = getRoutePointTypes();
   let list = '';
+  if (type === undefined) {
+    type = 'Flight';
+  }
   for (const point of routePointTypes) {
     const lowerCasePoint = point.toLowerCase();
     list += `<div class="event__type-item">
@@ -26,6 +29,7 @@ const createDestinationsName = () => {
 
 const checkEntry = (key, value, arrayOfObjects) => {
   let isFound = false;
+  if (arrayOfObjects === undefined) { return isFound; }
   arrayOfObjects.forEach((object) => {
     if (object[key] === value) {
       isFound = true;
@@ -92,10 +96,19 @@ const createDestination = (destination) => {
   }
 };
 
-export const createEditEventTemplate = (point, allOffers, isEditEvent = true) => {
+export const createOrEditEventTemplate = (point) => {
+  let basePrice, dateFrom, dateTo, destination, offers, type, name;
 
-  const { basePrice, dateFrom, dateTo, destination, offers, type } = point;
-  const { name } = destination;
+  if (point === undefined) {
+    type = getRoutePointTypes()[0];
+    name = getDestinationNames()[0];
+    dateFrom = dateTo = new Date();
+    basePrice = '';
+    destination = getDestinations().find((item) => item.name === name);
+  } else {
+    ({ basePrice, dateFrom, dateTo, destination, offers, type } = point);
+    ({ name } = destination);
+  }
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -140,13 +153,13 @@ export const createEditEventTemplate = (point, allOffers, isEditEvent = true) =>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
-        ${isEditEvent ? `
+        ${point !== undefined ? `
               <button button class="event__rollup-btn" type = "button" >
                 <span class="visually-hidden">Open event</span>
               </button >` : ''}
       </header>
       <section class="event__details">
-        ${createSectionOffers(allOffers, offers)}
+        ${createSectionOffers(getOffers(type, false), offers)}
         ${createDestination(destination)}
       </section>
     </form>

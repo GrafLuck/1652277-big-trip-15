@@ -3,11 +3,11 @@ import { createTripInfoTemplate } from '@view/trip-info.js';
 import { createFiltersTemplate } from '@view/filters.js';
 import { createSortingTemplate } from '@view/sorting.js';
 import { createEventListTemplate } from '@view/event-list.js';
-import { createEditEventTemplate } from '@view/edit-event.js';
+import { createOrEditEventTemplate } from '@view/edit-event.js';
 import { createRoutePointTemplate } from '@view/route-point.js';
-import { generatePoint, getOffers } from '@mock/route-point.js';
+import { generatePoint } from '@mock/route-point.js';
 
-const POINT_COUNT = 10;
+const POINT_COUNT = 20;
 
 const siteNavigation = document.querySelector('.trip-controls__navigation');
 const tripMain = document.querySelector('.trip-main');
@@ -29,8 +29,7 @@ render(tripEvents, createEventListTemplate());
 
 const tripEventsList = document.querySelector('.trip-events__list');
 
-render(tripEventsList, createEditEventTemplate(points[0], getOffers(points[0].type, false)));
-render(tripEventsList, createEditEventTemplate(points[0], getOffers(points[0].type, false), false));
+render(tripEventsList, createOrEditEventTemplate(points[0]));
 for (let i = 0; i < POINT_COUNT; i++) {
   render(tripEventsList, createRoutePointTemplate(points[i]));
 }
