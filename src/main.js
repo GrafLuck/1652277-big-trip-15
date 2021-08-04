@@ -7,7 +7,7 @@ import { createOrEditEventTemplate } from '@view/create-or-edit-event.js';
 import { createRoutePointTemplate } from '@view/route-point.js';
 import { generatePoint } from '@mock/route-point.js';
 
-const POINT_COUNT = 4;
+const POINT_COUNT = 5;
 
 const siteNavigation = document.querySelector('.trip-controls__navigation');
 const tripMain = document.querySelector('.trip-main');
@@ -32,6 +32,6 @@ render(tripEvents, createEventListTemplate());
 const tripEventsList = document.querySelector('.trip-events__list');
 
 render(tripEventsList, createOrEditEventTemplate(points[0]));
-for (let i = 0; i < POINT_COUNT; i++) {
+for (let i = 1; i < POINT_COUNT; i++) {
   render(tripEventsList, createRoutePointTemplate(points[i]));
 }

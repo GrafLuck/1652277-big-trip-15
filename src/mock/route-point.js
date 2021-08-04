@@ -108,7 +108,7 @@ const generateDescription = (min, max) => {
   let description = '';
   const numberOfSentencesInDescription = getRandomInteger(min, max);
   for (let i = 0; i < numberOfSentencesInDescription; i++) {
-    description += descriptions[getRandomInteger(0, descriptions.length)];
+    description += descriptions[getRandomInteger(0, descriptions.length - 1)];
   }
   return description;
 };
