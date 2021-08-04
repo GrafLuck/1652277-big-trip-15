@@ -7,9 +7,11 @@ const Time = {
 const DateFormat = {
   ONLY_DATE_MAIN: 'YYYY-MM-DD',
   ONLY_DATE_SECONDARY: 'MMM DD',
+  ONLY_DATE_TERTIARY: 'D MMM',
   FULL_DATE: 'DD/MM/YY HH:mm',
   DATETIME_ATTRIBUTE: 'YYYY-MM-DD[T]HH:mm',
   ONLY_TIME: 'HH:mm',
+  ONLY_DAY: 'D',
 };
 
 export { Time, DateFormat };

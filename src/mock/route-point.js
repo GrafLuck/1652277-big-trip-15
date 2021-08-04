@@ -130,7 +130,7 @@ const generateDestination = () => {
 };
 
 const generateDate = () => {
-  const maxDaysGap = 1;
+  const maxDaysGap = 6;
   const maxHoursGap = 1;
   const maxMinutesGap = 30;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
