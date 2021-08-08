@@ -1,5 +1,5 @@
 import { formatDate } from '@/utils.js';
-import { DateFormat } from '@/const.js';
+import { DateFormat, NUMBER_OF_CITIES_IN_TRIP } from '@/const.js';
 
 const createDuration = (points) => {
   const dateFrom = points[0].dateFrom;
@@ -24,7 +24,7 @@ const createRoute = (points) => {
   }
 
   let route = `${routeСities[0]}`;
-  if (routeСities.length <= 3) {
+  if (routeСities.length <= NUMBER_OF_CITIES_IN_TRIP) {
     for (let i = 1; i < routeСities.length; i++) {
       route += ` &mdash; ${routeСities[i]}`;
     }
@@ -40,26 +40,20 @@ const createPriceRoute = (points) => {
 
   points.forEach((point) => {
     priceRoute += point.basePrice;
-    for (let i = 0; i < point.offers.length; i++) {
-      priceRoute += point.offers[i].price;
-    }
+    const reducer = (accumulator, offer) => accumulator + offer.price;
+    priceRoute = point.offers.reduce(reducer, priceRoute);
   });
 
   return priceRoute;
 };
 
-export const createTripInfoTemplate = (points) => {
-  let tripInfoTemplate = '';
-  if (points !== undefined) {
-    tripInfoTemplate += `<section class="trip-main__trip-info  trip-info">
-              <div class="trip-info__main">
-                <h1 class="trip-info__title">${createRoute(points)}</h1>
-                <p class="trip-info__dates">${createDuration(points)}</p>
-              </div>
-              <p class="trip-info__cost">
-                Total: &euro;&nbsp;<span class="trip-info__cost-value">${createPriceRoute(points)}</span>
-              </p>
-            </section>`;
-  }
-  return tripInfoTemplate;
-};
+export const createTripInfoTemplate = (points) =>
+  `<section class="trip-main__trip-info  trip-info">
+    <div class="trip-info__main">
+      <h1 class="trip-info__title">${createRoute(points)}</h1>
+      <p class="trip-info__dates">${createDuration(points)}</p>
+    </div>
+    <p class="trip-info__cost">
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${createPriceRoute(points)}</span>
+    </p>
+  </section>`;

@@ -17,4 +17,6 @@ const DateFormat = {
   FULL_DURATION: 'DD[D] HH[H] mm[M]',
 };
 
-export { Time, DateFormat };
+const NUMBER_OF_CITIES_IN_TRIP = 3;
+
+export { Time, DateFormat, NUMBER_OF_CITIES_IN_TRIP };
