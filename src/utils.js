@@ -28,4 +28,24 @@ const formatDuration = (dateFrom, dateTo) => {
   return dayjs.duration({ minutes, hours, days }).format(dateFormat);
 };
 
+const renderElement = (container, element, place = 'beforeend') => {
+  if (place === 'beforeend') {
+    container.append(element);
+  } else if (place === 'afterbegin') {
+    container.prepend(element);
+  }
+};
+
+const renderTemplate = (container, template, place = 'beforeend') => {
+  container.insertAdjacentHTML(place, template);
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
 export { formatDate, formatDuration };
+export { renderElement, renderTemplate, createElement };
