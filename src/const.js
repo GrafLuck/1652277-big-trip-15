@@ -11,7 +11,10 @@ const DateFormat = {
   FULL_DATE: 'DD/MM/YY HH:mm',
   DATETIME_ATTRIBUTE: 'YYYY-MM-DD[T]HH:mm',
   ONLY_TIME: 'HH:mm',
+  ONLY_TIME_WITH_DESCRIPTION: 'HH[H] mm[M]',
   ONLY_DAY: 'D',
+  ONLY_MINUTES_WITH_DESCRIPTION: 'mm[M]',
+  FULL_DURATION: 'DD[D] HH[H] mm[M]',
 };
 
 export { Time, DateFormat };
