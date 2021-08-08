@@ -12,7 +12,6 @@ const DateFormat = {
   DATETIME_ATTRIBUTE: 'YYYY-MM-DD[T]HH:mm',
   ONLY_TIME: 'HH:mm',
   ONLY_TIME_WITH_DESCRIPTION: 'HH[H] mm[M]',
-  ONLY_DAY: 'D',
   ONLY_MINUTES_WITH_DESCRIPTION: 'mm[M]',
   FULL_DURATION: 'DD[D] HH[H] mm[M]',
 };
@@ -28,6 +27,6 @@ const Mode = {
   CREATE: 'Create',
 };
 
-const NUMBER_OF_CITIES_IN_TRIP = 3;
+const QUANTITY_OF_CITIES_IN_TRIP = 3;
 
-export { Time, DateFormat, Filter, Mode, NUMBER_OF_CITIES_IN_TRIP };
+export { Time, DateFormat, Filter, Mode, QUANTITY_OF_CITIES_IN_TRIP };

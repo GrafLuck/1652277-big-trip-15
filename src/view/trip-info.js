@@ -1,17 +1,10 @@
 import { formatDate } from '@/utils.js';
-import { DateFormat, NUMBER_OF_CITIES_IN_TRIP } from '@/const.js';
+import { DateFormat, QUANTITY_OF_CITIES_IN_TRIP } from '@/const.js';
 
 const createDurationInTemplate = (points) => {
   const dateFrom = points[0].dateFrom;
   const dateTo = points[points.length - 1].dateTo;
-  let durationInfo = `${formatDate(dateFrom, DateFormat.ONLY_DATE_TERTIARY)}&nbsp;&mdash;&nbsp;`;
-
-  if (dateFrom.month() === dateTo.month()) {
-    durationInfo += `${formatDate(dateTo, DateFormat.ONLY_DAY)}`;
-  } else {
-    durationInfo += `${formatDate(dateTo, DateFormat.ONLY_DATE_TERTIARY)}`;
-  }
-  return durationInfo;
+  return `${formatDate(dateFrom, DateFormat.ONLY_DATE_TERTIARY)}&nbsp;&mdash;&nbsp;${formatDate(dateTo, DateFormat.ONLY_DATE_TERTIARY)}`;
 };
 
 const createRouteInTemplate = (points) => {
@@ -24,7 +17,7 @@ const createRouteInTemplate = (points) => {
   }
 
   let route = `${routeСities[0]}`;
-  if (routeСities.length <= NUMBER_OF_CITIES_IN_TRIP) {
+  if (routeСities.length <= QUANTITY_OF_CITIES_IN_TRIP) {
     for (let i = 1; i < routeСities.length; i++) {
       route += ` &mdash; ${routeСities[i]}`;
     }
