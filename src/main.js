@@ -31,7 +31,7 @@ render(tripEvents, createEventListTemplate());
 
 const tripEventsList = document.querySelector('.trip-events__list');
 
-render(tripEventsList, createOrEditEventTemplate(points[0]));
+render(tripEventsList, createOrEditEventTemplate());
 for (let i = 1; i < POINT_COUNT; i++) {
   render(tripEventsList, createRoutePointTemplate(points[i]));
 }

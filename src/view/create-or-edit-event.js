@@ -1,6 +1,16 @@
 import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } from '@mock/route-point.js';
 import { formatDate } from '@/utils.js';
-import { DateFormat } from '@/const.js';
+import { DateFormat, Mode } from '@/const.js';
+
+const currentDate = new Date();
+const BLANK_POINT = {
+  basePrice: '',
+  dateFrom: currentDate,
+  dateTo: currentDate,
+  destination: getDestinations()[0],
+  offers: [],
+  type: getRoutePointTypes()[0],
+};
 
 const createRoutePointTypesInTemplate = (type) => {
   const routePointTypes = getRoutePointTypes();
@@ -25,10 +35,7 @@ const createDestinationNamesInTemplate = () => {
   return list;
 };
 
-const checkEntry = (value, entries) => {
-  if (entries === undefined) { return false; }
-  return Boolean(entries.find(({ title }) => title === value));
-};
+const checkEntry = (value, entries) => Boolean(entries.find(({ title }) => title === value));
 
 const createListOfOffersInTemplate = (allOffers, checkedOffers) => {
   let list = '';
@@ -88,20 +95,10 @@ const createSectionOfDestinationInTemplate = (destination) => {
     </section>`;
 };
 
-export const createOrEditEventTemplate = (point) => {
-  let basePrice, dateFrom, dateTo, destination, offers, type, name;
-
-  if (point === undefined) {
-    type = getRoutePointTypes()[0];
-    name = getDestinationNames()[0];
-    dateFrom = dateTo = new Date();
-    basePrice = '';
-    destination = getDestinations().find((item) => item.name === name);
-  } else {
-    ({ basePrice, dateFrom, dateTo, destination, offers, type } = point);
-    ({ name } = destination);
-  }
-
+export const createOrEditEventTemplate = (mode = Mode.CREATE, point = BLANK_POINT) => {
+  const { basePrice, dateFrom, dateTo, destination, offers, type } = point;
+  const { name } = destination;
+  const isEdit = mode === Mode.EDIT;
   return `
     <li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -145,8 +142,8 @@ export const createOrEditEventTemplate = (point) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          ${point !== undefined ? `
+          <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cansel'}</button>
+          ${isEdit ? `
                 <button button class="event__rollup-btn" type = "button" >
                   <span class="visually-hidden">Open event</span>
                 </button >` : ''}

@@ -1,14 +1,15 @@
+import { Filter } from '@/const.js';
 
-export const createEmptyList = (filter) => {
+export const createEmptyListOfPointsInTemplate = (filter) => {
   let message = '';
   switch (filter) {
-    case 'Everthing':
+    case Filter.EVERYTHING:
       message = 'Click New Event to create your first point';
       break;
-    case 'Past':
+    case Filter.PAST:
       message = 'There are no past events now';
       break;
-    case 'Future':
+    case Filter.FUTURE:
       message = 'There are no future events now';
       break;
   }

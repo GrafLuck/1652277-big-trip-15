@@ -17,6 +17,17 @@ const DateFormat = {
   FULL_DURATION: 'DD[D] HH[H] mm[M]',
 };
 
+const Filter = {
+  EVERYTHING: 'Everthing',
+  PAST: 'Past',
+  FUTURE: 'Future',
+};
+
+const Mode = {
+  EDIT: 'Edit',
+  CREATE: 'Create',
+};
+
 const NUMBER_OF_CITIES_IN_TRIP = 3;
 
-export { Time, DateFormat, NUMBER_OF_CITIES_IN_TRIP };
+export { Time, DateFormat, Filter, Mode, NUMBER_OF_CITIES_IN_TRIP };
