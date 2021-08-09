@@ -2,7 +2,7 @@ import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } f
 import { createElement, formatDate } from '@/utils.js';
 import { DateFormat, Mode } from '@/const.js';
 
-const BLANK_POINT = {
+const blankPoint = {
   basePrice: 0,
   dateFrom: new Date(),
   dateTo: new Date(),
@@ -97,7 +97,7 @@ const createSectionOfDestinationInTemplate = (destination) => {
 };
 
 export default class CreateOrEditEvent {
-  constructor(mode = Mode.CREATE, point = BLANK_POINT) {
+  constructor(mode = Mode.CREATE, point = blankPoint) {
     this._mode = mode;
     this._point = point;
     this._element = null;
