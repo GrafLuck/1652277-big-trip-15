@@ -1,21 +1,14 @@
 import { formatDate } from '@/utils.js';
-import { DateFormat, NUMBER_OF_CITIES_IN_TRIP } from '@/const.js';
 import { createElement } from '@/utils.js';
+import { DateFormat, QUANTITY_OF_CITIES_IN_TRIP } from '@/const.js';
 
-const createDuration = (points) => {
+const createDurationInTemplate = (points) => {
   const dateFrom = points[0].dateFrom;
   const dateTo = points[points.length - 1].dateTo;
-  let durationInfo = `${formatDate(dateFrom, DateFormat.ONLY_DATE_TERTIARY)}&nbsp;&mdash;&nbsp;`;
-
-  if (dateFrom.month() === dateTo.month()) {
-    durationInfo += `${formatDate(dateTo, DateFormat.ONLY_DAY)}`;
-  } else {
-    durationInfo += `${formatDate(dateTo, DateFormat.ONLY_DATE_TERTIARY)}`;
-  }
-  return durationInfo;
+  return `${formatDate(dateFrom, DateFormat.ONLY_DATE_TERTIARY)}&nbsp;&mdash;&nbsp;${formatDate(dateTo, DateFormat.ONLY_DATE_TERTIARY)}`;
 };
 
-const createRoute = (points) => {
+const createRouteInTemplate = (points) => {
   const routeСities = [];
   routeСities.push(points[0].destination.name);
   for (let i = 1; i < points.length; i++) {
@@ -25,7 +18,7 @@ const createRoute = (points) => {
   }
 
   let route = `${routeСities[0]}`;
-  if (routeСities.length <= NUMBER_OF_CITIES_IN_TRIP) {
+  if (routeСities.length <= QUANTITY_OF_CITIES_IN_TRIP) {
     for (let i = 1; i < routeСities.length; i++) {
       route += ` &mdash; ${routeСities[i]}`;
     }
@@ -36,7 +29,7 @@ const createRoute = (points) => {
   return route;
 };
 
-const createPriceRoute = (points) => {
+const createPriceRouteInTemplate = (points) => {
   let priceRoute = 0;
   const reducer = (accumulator, offer) => accumulator + offer.price;
 
@@ -57,11 +50,11 @@ export default class TripInfo {
   getTemplate() {
     return `<section class="trip-main__trip-info  trip-info">
               <div class="trip-info__main">
-                <h1 class="trip-info__title">${createRoute(this._points)}</h1>
-                <p class="trip-info__dates">${createDuration(this._points)}</p>
+                <h1 class="trip-info__title">${createRouteInTemplate(this._points)}</h1>
+                <p class="trip-info__dates">${createDurationInTemplate(this._points)}</p>
               </div>
               <p class="trip-info__cost">
-                Total: &euro;&nbsp;<span class="trip-info__cost-value">${createPriceRoute(this._points)}</span>
+                Total: &euro;&nbsp;<span class="trip-info__cost-value">${createPriceRouteInTemplate(this._points)}</span>
               </p>
             </section>`;
   }

@@ -2,7 +2,7 @@ import { formatDate, formatDuration } from '@/utils.js';
 import { DateFormat } from '@/const.js';
 import { createElement } from '@/utils.js';
 
-const createListOffers = (offers) => {
+const createListOffersInTemplate = (offers) => {
 
   const eventList = document.createElement('ul');
   eventList.classList.add('event__selected-offers');
@@ -30,13 +30,13 @@ export default class RoutePoint {
   getTemplate() {
     const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } = this._point;
     const { name } = destination;
-    const listOffers = createListOffers(offers);
+    const listOffers = createListOffersInTemplate(offers);
 
     return `<li class="trip-events__item">
               <div class="event">
                 <time class="event__date" datetime="${formatDate(dateFrom, DateFormat.ONLY_DATE_MAIN)}">${formatDate(dateFrom, DateFormat.ONLY_DATE_SECONDARY)}</time>
                 <div class="event__type">
-                  <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+                  <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
                 </div>
                 <h3 class="event__title">${type} ${name}</h3>
                 <div class="event__schedule">

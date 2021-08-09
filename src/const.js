@@ -12,11 +12,21 @@ const DateFormat = {
   DATETIME_ATTRIBUTE: 'YYYY-MM-DD[T]HH:mm',
   ONLY_TIME: 'HH:mm',
   ONLY_TIME_WITH_DESCRIPTION: 'HH[H] mm[M]',
-  ONLY_DAY: 'D',
   ONLY_MINUTES_WITH_DESCRIPTION: 'mm[M]',
   FULL_DURATION: 'DD[D] HH[H] mm[M]',
 };
 
-const NUMBER_OF_CITIES_IN_TRIP = 3;
+const Filter = {
+  EVERYTHING: 'Everthing',
+  PAST: 'Past',
+  FUTURE: 'Future',
+};
 
-export { Time, DateFormat, NUMBER_OF_CITIES_IN_TRIP };
+const Mode = {
+  EDIT: 'Edit',
+  CREATE: 'Create',
+};
+
+const QUANTITY_OF_CITIES_IN_TRIP = 3;
+
+export { Time, DateFormat, Filter, Mode, QUANTITY_OF_CITIES_IN_TRIP };

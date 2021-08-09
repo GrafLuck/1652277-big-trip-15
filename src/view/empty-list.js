@@ -1,4 +1,5 @@
 import { createElement } from '@/utils.js';
+import { Filter } from '@/const.js';
 
 export default class EmptyList {
   constructor(filter) {
@@ -9,13 +10,13 @@ export default class EmptyList {
   getTemplate() {
     let message = '';
     switch (this._filter) {
-      case 'Everthing':
+      case Filter.EVERYTHING:
         message = 'Click New Event to create your first point';
         break;
-      case 'Past':
+      case Filter.PAST:
         message = 'There are no past events now';
         break;
-      case 'Future':
+      case Filter.FUTURE:
         message = 'There are no future events now';
         break;
     }

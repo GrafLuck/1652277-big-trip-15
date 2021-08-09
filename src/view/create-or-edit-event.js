@@ -1,16 +1,39 @@
 import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } from '@mock/route-point.js';
 import { createElement, formatDate } from '@/utils.js';
-import { DateFormat } from '@/const.js';
+import { DateFormat, Mode } from '@/const.js';
+
+const BLANK_POINT = {
+  basePrice: 0,
+  dateFrom: new Date(),
+  dateTo: new Date(),
+  destination: getDestinations()[0],
+  id: 0,
+  isFavorite: false,
+  offers: [],
+  type: getRoutePointTypes()[0],
+};
+
+const checkEntry = (value, entries) => Boolean(entries.find(({ title }) => title === value));
+
+const createDescriptionOfPointInTemplate = (description) => `<p class="event__destination-description">${description}</p>`;
+
+const createListOfPicturesInTemplate = (pictures) => {
+  let list = '';
+  for (const picture of pictures) {
+    list += `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;
+  }
+  return list;
+};
 
 const createRoutePointTypesInTemplate = (type) => {
   const routePointTypes = getRoutePointTypes();
   let list = '';
 
   for (const point of routePointTypes) {
-    const lowerCasePoint = point.toLowerCase();
+    const pointWithFirstCapitalLetter = point[0].toUpperCase() + point.slice(1);
     list += `<div class="event__type-item">
-      <input id="event-type-${lowerCasePoint}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCasePoint}" ${type === point ? 'checked' : ''}>
-      <label class="event__type-label  event__type-label--${lowerCasePoint}" for="event-type-${lowerCasePoint}-1">${point}</label>
+      <input id="event-type-${point}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${point}" ${type === point ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${point}" for="event-type-${point}-1">${pointWithFirstCapitalLetter}</label>
     </div>`;
   }
   return list;
@@ -23,11 +46,6 @@ const createDestinationNamesInTemplate = () => {
     list += `<option value="${name}"></option>`;
   }
   return list;
-};
-
-const checkEntry = (value, entries) => {
-  if (entries === undefined) { return false; }
-  return Boolean(entries.find(({ title }) => title === value));
 };
 
 const createListOfOffersInTemplate = (allOffers, checkedOffers) => {
@@ -61,16 +79,6 @@ const createSectionOfOffersInTemplate = (allOffers, checkedOffers) => {
   return '';
 };
 
-const createDescriptionOfPointInTemplate = (description) => `<p class="event__destination-description">${description}</p>`;
-
-const createListOfPicturesInTemplate = (pictures) => {
-  let list = '';
-  for (const picture of pictures) {
-    list += `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;
-  }
-  return list;
-};
-
 const createSectionOfDestinationInTemplate = (destination) => {
   const { description, pictures } = destination;
   if (description.length === 0 && pictures.length === 0) {
@@ -89,24 +97,16 @@ const createSectionOfDestinationInTemplate = (destination) => {
 };
 
 export default class CreateOrEditEvent {
-  constructor(point) {
+  constructor(mode = Mode.CREATE, point = BLANK_POINT) {
+    this._mode = mode;
     this._point = point;
     this._element = null;
   }
 
   getTemplate() {
-    let basePrice, dateFrom, dateTo, destination, offers, type, name;
-
-    if (this._point === undefined) {
-      type = getRoutePointTypes()[0];
-      name = getDestinationNames()[0];
-      dateFrom = dateTo = new Date();
-      basePrice = '';
-      destination = getDestinations().find((item) => item.name === name);
-    } else {
-      ({ basePrice, dateFrom, dateTo, destination, offers, type } = this._point);
-      ({ name } = destination);
-    }
+    const { basePrice, dateFrom, dateTo, destination, offers, type } = this._point;
+    const { name } = destination;
+    const isEdit = this._mode === Mode.EDIT;
 
     return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -114,7 +114,7 @@ export default class CreateOrEditEvent {
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
                     </label>
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
                     <div class="event__type-list">
@@ -150,8 +150,8 @@ export default class CreateOrEditEvent {
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                  <button class="event__reset-btn" type="reset">Delete</button>
-                  ${this._point !== undefined ? `
+                  <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
+                  ${isEdit ? `
                         <button button class="event__rollup-btn" type = "button" >
                           <span class="visually-hidden">Open event</span>
                         </button >` : ''}
@@ -175,3 +175,4 @@ export default class CreateOrEditEvent {
     this._element = null;
   }
 }
+
