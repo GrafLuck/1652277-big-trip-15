@@ -1,4 +1,5 @@
 import { formatDate } from '@/utils.js';
+import { createElement } from '@/utils.js';
 import { DateFormat, QUANTITY_OF_CITIES_IN_TRIP } from '@/const.js';
 
 const createDurationInTemplate = (points) => {
@@ -28,25 +29,44 @@ const createRouteInTemplate = (points) => {
   return route;
 };
 
-const createPriceRouteInTemplate = (points) => {
+const calculatePriceOfRoute = (points) => {
   let priceRoute = 0;
+  const reducer = (accumulator, offer) => accumulator + offer.price;
 
   points.forEach((point) => {
     priceRoute += point.basePrice;
-    const reducer = (accumulator, offer) => accumulator + offer.price;
     priceRoute = point.offers.reduce(reducer, priceRoute);
   });
 
   return priceRoute;
 };
 
-export const createTripInfoTemplate = (points) =>
-  `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">${createRouteInTemplate(points)}</h1>
-      <p class="trip-info__dates">${createDurationInTemplate(points)}</p>
-    </div>
-    <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${createPriceRouteInTemplate(points)}</span>
-    </p>
-  </section>`;
+export default class TripInfo {
+  constructor(points) {
+    this._points = points;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `<section class="trip-main__trip-info  trip-info">
+              <div class="trip-info__main">
+                <h1 class="trip-info__title">${createRouteInTemplate(this._points)}</h1>
+                <p class="trip-info__dates">${createDurationInTemplate(this._points)}</p>
+              </div>
+              <p class="trip-info__cost">
+                Total: &euro;&nbsp;<span class="trip-info__cost-value">${calculatePriceOfRoute(this._points)}</span>
+              </p>
+            </section>`;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

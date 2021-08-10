@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { Time, DateFormat } from '@/const.js';
+import { Time, DateFormat, LocationElement } from '@/const.js';
 
 dayjs.extend(duration);
 
@@ -28,4 +28,20 @@ const formatDuration = (dateFrom, dateTo) => {
   return dayjs.duration({ minutes, hours, days }).format(dateFormat);
 };
 
+const render = (container, element, place = LocationElement.BEFOREEND) => {
+  if (place === LocationElement.BEFOREEND) {
+    container.append(element);
+  } else if (place === LocationElement.AFTERBEGIN) {
+    container.prepend(element);
+  }
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
 export { formatDate, formatDuration };
+export { render, createElement };
