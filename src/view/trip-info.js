@@ -29,7 +29,7 @@ const createRouteInTemplate = (points) => {
   return route;
 };
 
-const createPriceRouteInTemplate = (points) => {
+const calculatePriceOfRoute = (points) => {
   let priceRoute = 0;
   const reducer = (accumulator, offer) => accumulator + offer.price;
 
@@ -54,7 +54,7 @@ export default class TripInfo {
                 <p class="trip-info__dates">${createDurationInTemplate(this._points)}</p>
               </div>
               <p class="trip-info__cost">
-                Total: &euro;&nbsp;<span class="trip-info__cost-value">${createPriceRouteInTemplate(this._points)}</span>
+                Total: &euro;&nbsp;<span class="trip-info__cost-value">${calculatePriceOfRoute(this._points)}</span>
               </p>
             </section>`;
   }

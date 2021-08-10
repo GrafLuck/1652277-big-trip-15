@@ -27,6 +27,11 @@ const Mode = {
   CREATE: 'Create',
 };
 
+const LocationElement = {
+  BEFOREEND: 'beforeend',
+  AFTERBEGIN: 'afterbegin',
+};
+
 const QUANTITY_OF_CITIES_IN_TRIP = 3;
 
-export { Time, DateFormat, Filter, Mode, QUANTITY_OF_CITIES_IN_TRIP };
+export { Time, DateFormat, Filter, Mode, LocationElement, QUANTITY_OF_CITIES_IN_TRIP };

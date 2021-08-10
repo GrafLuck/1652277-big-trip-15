@@ -152,7 +152,7 @@ export default class CreateOrEditEvent {
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                   <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
                   ${isEdit ? `
-                        <button button class="event__rollup-btn" type = "button" >
+                        <button class="event__rollup-btn" type = "button">
                           <span class="visually-hidden">Open event</span>
                         </button >` : ''}
                 </header>
