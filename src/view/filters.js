@@ -1,8 +1,8 @@
-import { createElement } from '@/utils.js';
+import AbstractView from '@view/abstract.js';
 
-export default class Filters {
+export default class Filters extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
   }
 
   getTemplate() {
@@ -24,16 +24,5 @@ export default class Filters {
 
               <button class="visually-hidden" type="submit">Accept filter</button>
             </form>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

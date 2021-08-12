@@ -1,6 +1,7 @@
 import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } from '@mock/route-point.js';
-import { createElement, formatDate } from '@/utils.js';
+import { formatDate } from '@/utils.js';
 import { DateFormat, Mode } from '@/const.js';
+import AbstractView from '@view/abstract.js';
 
 const blankPoint = {
   basePrice: 0,
@@ -96,11 +97,11 @@ const createSectionOfDestinationInTemplate = (destination) => {
     </section>`;
 };
 
-export default class CreationOrEditingEvent {
+export default class CreationOrEditingEvent extends AbstractView {
   constructor(mode = Mode.CREATE, point = blankPoint) {
+    super();
     this._mode = mode;
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
@@ -162,17 +163,6 @@ export default class CreationOrEditingEvent {
                 </section>
               </form>
             </li>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

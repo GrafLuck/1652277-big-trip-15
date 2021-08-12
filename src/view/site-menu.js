@@ -1,8 +1,8 @@
-import { createElement } from '@/utils.js';
+import AbstractView from '@view/abstract.js';
 
-export default class SiteMenu {
+export default class SiteMenu extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
   }
 
   getTemplate() {
@@ -10,16 +10,5 @@ export default class SiteMenu {
               <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
               <a class="trip-tabs__btn" href="#">Stats</a>
             </nav>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,10 +1,10 @@
-import { createElement } from '@/utils.js';
 import { Filter } from '@/const.js';
+import AbstractView from '@view/abstract.js';
 
-export default class EmptyList {
+export default class EmptyList extends AbstractView {
   constructor(filter) {
+    super();
     this._filter = filter;
-    this._element = null;
   }
 
   getTemplate() {
@@ -21,16 +21,5 @@ export default class EmptyList {
         break;
     }
     return `<p class="trip-events__msg">${message}</p>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

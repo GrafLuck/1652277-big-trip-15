@@ -1,8 +1,8 @@
-import { createElement } from '@/utils.js';
+import AbstractView from '@/view/abstract.js';
 
-export default class Sorting {
+export default class Sorting extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
   }
 
   getTemplate() {
@@ -32,16 +32,5 @@ export default class Sorting {
                 <label class="trip-sort__btn" for="sort-offer">Offers</label>
               </div>
             </form>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
