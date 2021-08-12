@@ -1,4 +1,4 @@
-import { formatDate } from '@/utils.js';
+import { formatDate } from '@utils/date.js';
 import { DateFormat, QUANTITY_OF_CITIES_IN_TRIP } from '@/const.js';
 import AbstractView from '@/view/abstract.js';
 

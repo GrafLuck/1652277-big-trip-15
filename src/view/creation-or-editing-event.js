@@ -1,5 +1,5 @@
 import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } from '@mock/route-point.js';
-import { formatDate } from '@/utils.js';
+import { formatDate } from '@utils/date.js';
 import { DateFormat, Mode } from '@/const.js';
 import AbstractView from '@view/abstract.js';
 
@@ -102,6 +102,8 @@ export default class CreationOrEditingEvent extends AbstractView {
     super();
     this._mode = mode;
     this._point = point;
+    this._formEditSubmitHandler = this._formEditSubmitHandler.bind(this);
+    this._buttonRollupClickHandler = this._buttonRollupClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -163,6 +165,25 @@ export default class CreationOrEditingEvent extends AbstractView {
                 </section>
               </form>
             </li>`;
+  }
+
+  _formEditSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formEditSubmit();
+  }
+
+  _buttonRollupClickHandler() {
+    this._callback.buttonRollupClick();
+  }
+
+  setFormEditSubmitHandler(callback) {
+    this._callback.formEditSubmit = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formEditSubmitHandler);
+  }
+
+  setButtonRollupClickHandler(callback) {
+    this._callback.buttonRollupClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._buttonRollupClickHandler);
   }
 }
 

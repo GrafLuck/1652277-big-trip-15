@@ -1,4 +1,4 @@
-import { formatDate, formatDuration } from '@/utils.js';
+import { formatDate, formatDuration } from '@utils/date.js';
 import { DateFormat } from '@/const.js';
 import AbstractView from '@view/abstract.js';
 
@@ -25,6 +25,7 @@ export default class RoutePoint extends AbstractView {
   constructor(point) {
     super();
     this._point = point;
+    this._buttonExpandClickHandler = this._buttonExpandClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -63,5 +64,15 @@ export default class RoutePoint extends AbstractView {
                 </button>
               </div>
             </li>`;
+  }
+
+  _buttonExpandClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.buttonExpandClick();
+  }
+
+  setButtonExpandClickHandler(callback) {
+    this._callback.buttonExpandClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._buttonExpandClickHandler);
   }
 }
