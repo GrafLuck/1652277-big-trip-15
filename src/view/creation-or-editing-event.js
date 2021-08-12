@@ -96,7 +96,7 @@ const createSectionOfDestinationInTemplate = (destination) => {
     </section>`;
 };
 
-export default class CreateOrEditEvent {
+export default class CreationOrEditingEvent {
   constructor(mode = Mode.CREATE, point = blankPoint) {
     this._mode = mode;
     this._point = point;
