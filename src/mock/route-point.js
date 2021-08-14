@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomInteger } from '@utils/common.js';
+import { getRandomInteger } from '@mock/random.js';
 
 const destinationsArray = [];
 const offerArray = [];

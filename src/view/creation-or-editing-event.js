@@ -1,6 +1,6 @@
 import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } from '@mock/route-point.js';
 import { formatDate } from '@utils/date.js';
-import { DateFormat, Mode } from '@/const.js';
+import { DateFormat, RoutePointOperationMode, ButtonLabel } from '@/const.js';
 import AbstractView from '@view/abstract.js';
 
 const blankPoint = {
@@ -98,18 +98,18 @@ const createSectionOfDestinationInTemplate = (destination) => {
 };
 
 export default class CreationOrEditingEvent extends AbstractView {
-  constructor(mode = Mode.CREATE, point = blankPoint) {
+  constructor(mode = RoutePointOperationMode.CREATE, point = blankPoint) {
     super();
     this._mode = mode;
     this._point = point;
-    this._formEditSubmitHandler = this._formEditSubmitHandler.bind(this);
-    this._buttonRollupClickHandler = this._buttonRollupClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
   }
 
   getTemplate() {
     const { basePrice, dateFrom, dateTo, destination, offers, type } = this._point;
     const { name } = destination;
-    const isEdit = this._mode === Mode.EDIT;
+    const isEdit = this._mode === RoutePointOperationMode.EDIT;
 
     return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -153,7 +153,7 @@ export default class CreationOrEditingEvent extends AbstractView {
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                  <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
+                  <button class="event__reset-btn" type="reset">${isEdit ? ButtonLabel.DELETE : ButtonLabel.CANCEL}</button>
                   ${isEdit ? `
                         <button class="event__rollup-btn" type = "button">
                           <span class="visually-hidden">Open event</span>
@@ -167,23 +167,23 @@ export default class CreationOrEditingEvent extends AbstractView {
             </li>`;
   }
 
-  _formEditSubmitHandler(evt) {
+  setSubmitHandler(callback) {
+    this._callback.handleFormSubmit = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setRollupButtonClickHandler(callback) {
+    this._callback.handleRollupButtonClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupButtonClickHandler);
+  }
+
+  _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formEditSubmit();
+    this._callback.handleFormSubmit();
   }
 
-  _buttonRollupClickHandler() {
-    this._callback.buttonRollupClick();
-  }
-
-  setFormEditSubmitHandler(callback) {
-    this._callback.formEditSubmit = callback;
-    this.getElement().querySelector('form').addEventListener('submit', this._formEditSubmitHandler);
-  }
-
-  setButtonRollupClickHandler(callback) {
-    this._callback.buttonRollupClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._buttonRollupClickHandler);
+  _rollupButtonClickHandler() {
+    this._callback.handleRollupButtonClick();
   }
 }
 

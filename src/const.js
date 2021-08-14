@@ -22,7 +22,7 @@ const Filter = {
   FUTURE: 'Future',
 };
 
-const Mode = {
+const RoutePointOperationMode = {
   EDIT: 'Edit',
   CREATE: 'Create',
 };
@@ -37,6 +37,11 @@ const KeyboardKey = {
   ESC: 'Esc',
 };
 
+const ButtonLabel = {
+  CANCEL: 'Cansel',
+  DELETE: 'Delete',
+};
+
 const QUANTITY_OF_CITIES_IN_TRIP = 3;
 
-export { Time, DateFormat, Filter, Mode, LocationElement, KeyboardKey, QUANTITY_OF_CITIES_IN_TRIP };
+export { Time, DateFormat, Filter, RoutePointOperationMode, LocationElement, KeyboardKey, ButtonLabel, QUANTITY_OF_CITIES_IN_TRIP };

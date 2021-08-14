@@ -8,7 +8,7 @@ import CreationOrEditingEventView from '@view/creation-or-editing-event.js';
 import RoutePointView from '@view/route-point.js';
 import { generatePoint } from '@mock/route-point.js';
 import { render, replace } from '@utils/render.js';
-import { Mode, LocationElement, Filter, KeyboardKey } from '@/const.js';
+import { RoutePointOperationMode, LocationElement, Filter, KeyboardKey } from '@/const.js';
 
 const POINT_COUNT = 5;
 
@@ -24,13 +24,13 @@ points.sort(compare);
 
 const renderPoint = (eventListView, point) => {
   const routePointView = new RoutePointView(point);
-  const editEventView = new CreationOrEditingEventView(Mode.EDIT, point);
+  const editEventView = new CreationOrEditingEventView(RoutePointOperationMode.EDIT, point);
 
   // Callback используется по причине того, что происходит перекрестный вызов между функциями closeEditPointView и escKeyDownHandler
   // и я не вижу другого способа как решить проблему, что нельзя использовать функцию до ее объявления
-  const closeEditPointView = (callbackForRemove) => {
+  const closeEditPointView = (handleEscKeyDown) => {
     replace(routePointView, editEventView);
-    document.removeEventListener('keydown', callbackForRemove);
+    document.removeEventListener('keydown', handleEscKeyDown);
   };
 
   const escKeyDownHandler = (evt) => {
@@ -40,22 +40,22 @@ const renderPoint = (eventListView, point) => {
     }
   };
 
-  const buttonExpandClickHandler = () => {
+  const handleExpandButtonClick = () => {
     replace(editEventView, routePointView);
     document.addEventListener('keydown', escKeyDownHandler);
   };
 
-  const buttonRollupClickHandler = () => {
+  const handleRollupButtonClick = () => {
     closeEditPointView(escKeyDownHandler);
   };
 
-  const formEditSubmitHandler = () => {
+  const handleSubmit = () => {
     closeEditPointView(escKeyDownHandler);
   };
 
-  routePointView.setButtonExpandClickHandler(buttonExpandClickHandler);
-  editEventView.setFormEditSubmitHandler(formEditSubmitHandler);
-  editEventView.setButtonRollupClickHandler(buttonRollupClickHandler);
+  routePointView.setRollupButtonClickHandler(handleExpandButtonClick);
+  editEventView.setSubmitHandler(handleSubmit);
+  editEventView.setRollupButtonClickHandler(handleRollupButtonClick);
 
   render(eventListView, routePointView);
 };
@@ -68,9 +68,9 @@ const renderInfoAboutTrip = (routePoints, filter = Filter.EVERYTHING) => {
     render(tripMain, new TripInfoView(routePoints), LocationElement.AFTERBEGIN);
     render(tripEvents, new SortingView());
     render(tripEvents, eventListView);
-    for (let i = 0; i < routePoints.length; i++) {
-      renderPoint(eventListView, routePoints[i]);
-    }
+    routePoints.forEach((routePoint) => {
+      renderPoint(eventListView, routePoint);
+    });
   }
 };
 

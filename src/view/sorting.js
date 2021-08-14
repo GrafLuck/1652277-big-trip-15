@@ -1,10 +1,6 @@
 import AbstractView from '@/view/abstract.js';
 
 export default class Sorting extends AbstractView {
-  constructor() {
-    super();
-  }
-
   getTemplate() {
     return `<form form class="trip-events__trip-sort  trip-sort" action = "#" method = "get" >
               <div class="trip-sort__item  trip-sort__item--day">

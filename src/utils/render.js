@@ -17,11 +17,11 @@ const render = (container, child, place = LocationElement.BEFOREEND) => {
   }
 };
 
-const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
+const create = (template) => {
+  const newDiv = document.createElement('div');
+  newDiv.innerHTML = template;
 
-  return newElement.firstChild;
+  return newDiv.firstChild;
 };
 
 const replace = (newChild, oldChild) => {
@@ -33,9 +33,13 @@ const replace = (newChild, oldChild) => {
     newChild = newChild.getElement();
   }
 
+  if (oldChild === null || newChild === null) {
+    throw new Error('Can\'t replace unexisting elements');
+  }
+
   const parent = oldChild.parentElement;
 
-  if (parent === null || oldChild === null || newChild === null) {
+  if (parent === null) {
     throw new Error('Can\'t replace unexisting elements');
   }
 
@@ -51,4 +55,4 @@ const remove = (component) => {
   component.removeElement();
 };
 
-export { render, createElement, replace, remove };
+export { render, create, replace, remove };
