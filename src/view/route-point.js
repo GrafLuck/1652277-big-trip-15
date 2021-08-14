@@ -1,6 +1,6 @@
-import { formatDate, formatDuration } from '@/utils.js';
+import { formatDate, formatDuration } from '@utils/date.js';
 import { DateFormat } from '@/const.js';
-import { createElement } from '@/utils.js';
+import AbstractView from '@view/abstract.js';
 
 const createListOffersInTemplate = (offers) => {
 
@@ -21,10 +21,11 @@ const createListOffersInTemplate = (offers) => {
   return eventList.outerHTML;
 };
 
-export default class RoutePoint {
+export default class RoutePoint extends AbstractView {
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
+    this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -65,14 +66,13 @@ export default class RoutePoint {
             </li>`;
   }
 
-  getElement() {
-    if (!this.point) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  setRollupButtonClickHandler(callback) {
+    this._callback.handleRollupButtonClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupButtonClickHandler);
   }
 
-  removeElement() {
-    this._element = null;
+  _rollupButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.handleRollupButtonClick();
   }
 }

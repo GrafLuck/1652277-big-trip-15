@@ -1,6 +1,6 @@
-import { formatDate } from '@/utils.js';
-import { createElement } from '@/utils.js';
+import { formatDate } from '@utils/date.js';
 import { DateFormat, QUANTITY_OF_CITIES_IN_TRIP } from '@/const.js';
+import AbstractView from '@/view/abstract.js';
 
 const createDurationInTemplate = (points) => {
   const dateFrom = points[0].dateFrom;
@@ -41,10 +41,10 @@ const calculatePriceOfRoute = (points) => {
   return priceRoute;
 };
 
-export default class TripInfo {
+export default class TripInfo extends AbstractView {
   constructor(points) {
+    super();
     this._points = points;
-    this._element = null;
   }
 
   getTemplate() {
@@ -57,16 +57,5 @@ export default class TripInfo {
                 Total: &euro;&nbsp;<span class="trip-info__cost-value">${calculatePriceOfRoute(this._points)}</span>
               </p>
             </section>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
