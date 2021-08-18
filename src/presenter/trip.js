@@ -6,7 +6,7 @@ import SortingView from '@view/sorting.js';
 import PointPresenter from './point.js';
 
 import { render } from '@utils/render.js';
-import { RoutePointOperationMode, LocationElement } from '@/const.js';
+import { LocationElement } from '@/const.js';
 import { updateItem } from './../utils/common.js';
 
 export default class Trip {
@@ -21,12 +21,17 @@ export default class Trip {
     this._pointPresenter = new Map();
 
     this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(points) {
     this._points = points;
     this._tripInfoView = new TripInfoView(this._points);
     this._renderInfoAboutTrip();
+  }
+
+  _handleModeChange() {
+    this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
   _handlePointChange(updatedPoint) {
@@ -63,7 +68,7 @@ export default class Trip {
       this._renderSorting();
       this._renderEventList();
       this._points.forEach((point) => {
-        const pointPresenter = new PointPresenter(this._eventListView, this._handlePointChange, RoutePointOperationMode.EDIT);
+        const pointPresenter = new PointPresenter(this._eventListView, this._handlePointChange, this._handleModeChange);
         pointPresenter.init(point);
         pointPresenter.renderPoint();
         this._pointPresenter.set(point.id, pointPresenter);

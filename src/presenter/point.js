@@ -1,13 +1,14 @@
 import RoutePointView from '@view/route-point.js';
 import CreationOrEditingEventView from '@view/creation-or-editing-event.js';
 import { render, replace, remove } from '@utils/render.js';
-import { KeyboardKey } from '@/const.js';
+import { KeyboardKey, RoutePointOperationMode } from '@/const.js';
 
 export default class Point {
-  constructor(pointContainer, changeData, operationMode) {
+  constructor(pointContainer, changeData, changeMode) {
     this._pointContainer = pointContainer;
     this._changeData = changeData;
-    this._operationMode = operationMode;
+    this._changeMode = changeMode;
+    this._mode = RoutePointOperationMode.VIEW;
 
     this._routePointView = null;
     this._operationPointView = null;
@@ -26,7 +27,11 @@ export default class Point {
     const prevOperationPointView = this._operationPointView;
 
     this._routePointView = new RoutePointView(this._point);
-    this._operationPointView = new CreationOrEditingEventView(this._operationMode, this._point);
+    if (this._point === null) {
+      this._operationPointView = new CreationOrEditingEventView(RoutePointOperationMode.CREATE, this._point);
+    } else {
+      this._operationPointView = new CreationOrEditingEventView(RoutePointOperationMode.EDIT, this._point);
+    }
 
     this._setHandler();
 
@@ -35,11 +40,11 @@ export default class Point {
       return;
     }
 
-    if (this._pointContainer.getElement().contains(prevRoutePointView.getElement())) {
+    if (this._mode === RoutePointOperationMode.VIEW) {
       replace(this._routePointView, prevRoutePointView);
     }
 
-    if (this._pointContainer.getElement().contains(prevOperationPointView.getElement())) {
+    if (this._mode === RoutePointOperationMode.EDIT) {
       replace(this._operationPointView, prevOperationPointView);
     }
 
@@ -52,9 +57,16 @@ export default class Point {
     remove(this._operationPointView);
   }
 
+  resetView() {
+    if (this._mode !== RoutePointOperationMode.VIEW) {
+      this._closeEditPointView(this._escKeyDownHandler);
+    }
+  }
+
   _closeEditPointView(handleEscKeyDown) {
     replace(this._routePointView, this._operationPointView);
     document.removeEventListener('keydown', handleEscKeyDown);
+    this._mode = RoutePointOperationMode.VIEW;
   }
 
   _escKeyDownHandler(evt) {
@@ -67,14 +79,15 @@ export default class Point {
   _handleExpandButtonClick() {
     replace(this._operationPointView, this._routePointView);
     document.addEventListener('keydown', this._escKeyDownHandler);
+    this._changeMode();
+    this._mode = RoutePointOperationMode.EDITING;
   }
 
   _handleRollupButtonClick() {
     this._closeEditPointView(this._escKeyDownHandler);
   }
 
-  _handleSubmit(point) {
-    this._changeData(point);
+  _handleSubmit() {
     this._closeEditPointView(this._escKeyDownHandler);
   }
 
