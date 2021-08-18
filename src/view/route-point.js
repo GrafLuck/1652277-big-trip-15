@@ -26,6 +26,7 @@ export default class RoutePoint extends AbstractView {
     super();
     this._point = point;
     this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -71,8 +72,18 @@ export default class RoutePoint extends AbstractView {
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupButtonClickHandler);
   }
 
+  setFavoriteClickHandler(callback) {
+    this._callback.handleFavoriteClick = callback;
+    this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClickHandler);
+  }
+
   _rollupButtonClickHandler(evt) {
     evt.preventDefault();
     this._callback.handleRollupButtonClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.handleFavoriteClick();
   }
 }

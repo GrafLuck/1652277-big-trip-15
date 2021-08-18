@@ -20,5 +20,5 @@ points.sort(compare);
 render(siteNavigation, new SiteMenuView());
 render(filters, new FiltersView());
 
-const tripPresenter = new TripPresenter(tripEvents, tripMain, points, Filter.EVERYTHING);
-tripPresenter.renderInfoAboutTrip();
+const tripPresenter = new TripPresenter(tripEvents, tripMain, Filter.EVERYTHING);
+tripPresenter.init(points);
