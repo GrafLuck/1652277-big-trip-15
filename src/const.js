@@ -23,6 +23,7 @@ const Filter = {
 };
 
 const RoutePointOperationMode = {
+  VIEW: 'View',
   EDIT: 'Edit',
   CREATE: 'Create',
 };
