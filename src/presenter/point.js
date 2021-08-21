@@ -4,113 +4,113 @@ import { render, replace, remove } from '@utils/render.js';
 import { KeyboardKey, RoutePointOperationMode } from '@/const.js';
 
 export default class Point {
-  constructor(pointContainer, changeData, changeMode) {
-    this._pointContainer = pointContainer;
+  constructor(container, changeData, changeMode) {
+    this._container = container;
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._mode = RoutePointOperationMode.VIEW;
 
-    this._routePointView = null;
-    this._operationPointView = null;
+    this._waypointView = null;
+    this._operationView = null;
 
     this._handleExpandButtonClick = this._handleExpandButtonClick.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._handleRollupButtonClick = this._handleRollupButtonClick.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._escKeydownHandler = this._escKeydownHandler.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(point) {
-    this._point = point;
+    this._waypoint = point;
 
-    const prevRoutePointView = this._routePointView;
-    const prevOperationPointView = this._operationPointView;
+    const prevWaypointView = this._waypointView;
+    const prevOperationView = this._operationView;
 
-    this._routePointView = new RoutePointView(this._point);
-    if (this._point === null) {
-      this._operationPointView = new CreationOrEditingEventView(RoutePointOperationMode.CREATE, this._point);
+    this._waypointView = new RoutePointView(this._waypoint);
+    if (this._waypoint === null) {
+      this._operationView = new CreationOrEditingEventView(RoutePointOperationMode.CREATE, this._waypoint);
     } else {
-      this._operationPointView = new CreationOrEditingEventView(RoutePointOperationMode.EDIT, this._point);
+      this._operationView = new CreationOrEditingEventView(RoutePointOperationMode.EDIT, this._waypoint);
     }
 
     this._setHandler();
 
-    if (prevRoutePointView === null || prevOperationPointView === null) {
-      render(this._pointContainer, this._routePointView);
+    if (prevWaypointView === null || prevOperationView === null) {
+      render(this._container, this._waypointView);
       return;
     }
 
     if (this._mode === RoutePointOperationMode.VIEW) {
-      replace(this._routePointView, prevRoutePointView);
+      replace(this._waypointView, prevWaypointView);
     }
 
     if (this._mode === RoutePointOperationMode.EDIT) {
-      replace(this._operationPointView, prevOperationPointView);
+      replace(this._operationView, prevWaypointView);
     }
 
-    remove(prevRoutePointView);
-    remove(prevOperationPointView);
+    remove(prevWaypointView);
+    remove(prevOperationView);
   }
 
   destroy() {
-    remove(this._routePointView);
-    remove(this._operationPointView);
+    remove(this._waypointView);
+    remove(this._operationView);
   }
 
   resetView() {
     if (this._mode !== RoutePointOperationMode.VIEW) {
-      this._closeEditPointView(this._escKeyDownHandler);
+      this._closeEditWaypointView(this._escKeydownHandler);
     }
   }
 
-  _closeEditPointView(handleEscKeyDown) {
-    replace(this._routePointView, this._operationPointView);
-    document.removeEventListener('keydown', handleEscKeyDown);
+  renderWaypoint() {
+    render(this._container, this._waypointView);
+  }
+
+  _setHandler() {
+    this._waypointView.setRollupButtonClickHandler(this._handleExpandButtonClick);
+    this._operationView.setSubmitHandler(this._handleSubmit);
+    this._operationView.setRollupButtonClickHandler(this._handleRollupButtonClick);
+    this._waypointView.setFavoriteClickHandler(this._handleFavoriteClick);
+  }
+
+  _closeEditWaypointView(escKeydownHandler) {
+    replace(this._waypointView, this._operationView);
+    document.removeEventListener('keydown', escKeydownHandler);
     this._mode = RoutePointOperationMode.VIEW;
   }
 
-  _escKeyDownHandler(evt) {
-    if (evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESC) {
-      evt.preventDefault();
-      this._closeEditPointView(this._escKeyDownHandler);
-    }
-  }
-
   _handleExpandButtonClick() {
-    replace(this._operationPointView, this._routePointView);
-    document.addEventListener('keydown', this._escKeyDownHandler);
+    replace(this._operationView, this._waypointView);
+    document.addEventListener('keydown', this._escKeydownHandler);
     this._changeMode();
     this._mode = RoutePointOperationMode.EDITING;
   }
 
   _handleRollupButtonClick() {
-    this._closeEditPointView(this._escKeyDownHandler);
+    this._closeEditWaypointView(this._escKeydownHandler);
   }
 
   _handleSubmit() {
-    this._closeEditPointView(this._escKeyDownHandler);
+    this._closeEditWaypointView(this._escKeydownHandler);
   }
 
   _handleFavoriteClick() {
     this._changeData(
       Object.assign(
         {},
-        this._point,
+        this._waypoint,
         {
-          isFavorite: !this._point.isFavorite,
+          isFavorite: !this._waypoint.isFavorite,
         },
       ),
     );
   }
 
-  _setHandler() {
-    this._routePointView.setRollupButtonClickHandler(this._handleExpandButtonClick);
-    this._operationPointView.setSubmitHandler(this._handleSubmit);
-    this._operationPointView.setRollupButtonClickHandler(this._handleRollupButtonClick);
-    this._routePointView.setFavoriteClickHandler(this._handleFavoriteClick);
-  }
-
-  renderPoint() {
-    render(this._pointContainer, this._routePointView);
+  _escKeydownHandler(evt) {
+    if (evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESC) {
+      evt.preventDefault();
+      this._closeEditWaypointView(this._escKeydownHandler);
+    }
   }
 }

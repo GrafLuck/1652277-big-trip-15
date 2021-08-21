@@ -10,9 +10,9 @@ import { LocationElement } from '@/const.js';
 import { updateItem } from './../utils/common.js';
 
 export default class Trip {
-  constructor(tripContainer, tripInfoContainer, filter) {
-    this._tripContainer = tripContainer;
-    this._tripInfoContainer = tripInfoContainer;
+  constructor(container, infoContainer, filter) {
+    this._container = container;
+    this._infoContainer = infoContainer;
 
     this._filter = filter;
     this._eventListView = new EventListView();
@@ -26,8 +26,45 @@ export default class Trip {
 
   init(points) {
     this._points = points;
-    this._tripInfoView = new TripInfoView(this._points);
-    this._renderInfoAboutTrip();
+    this._infoView = new TripInfoView(this._points);
+    this._renderInfo();
+  }
+
+  _renderEmptyList() {
+    render(this._container, this._emptyListView);
+  }
+
+  _renderEventList() {
+    render(this._container, this._eventListView);
+  }
+
+  _renderSummary() {
+    render(this._infoContainer, this._infoView, LocationElement.AFTERBEGIN);
+  }
+
+  _renderSorting() {
+    render(this._container, this._sortingView);
+  }
+
+  _renderInfo() {
+    if (this._points.length === 0) {
+      this._renderEmptyList();
+    } else {
+      this._renderSummary();
+      this._renderSorting();
+      this._renderEventList();
+      this._points.forEach((point) => {
+        const pointPresenter = new PointPresenter(this._eventListView, this._handlePointChange, this._handleModeChange);
+        pointPresenter.init(point);
+        pointPresenter.renderWaypoint();
+        this._pointPresenter.set(point.id, pointPresenter);
+      });
+    }
+  }
+
+  _clearEventList() {
+    this._pointPresenter.forEach((presenter) => presenter.destroy());
+    this._pointPresenter.clear();
   }
 
   _handleModeChange() {
@@ -38,42 +75,4 @@ export default class Trip {
     this._points = updateItem(this._points, updatedPoint);
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
-
-  _renderEmptyList() {
-    render(this._tripContainer, this._emptyListView);
-  }
-
-  _renderEventList() {
-    render(this._tripContainer, this._eventListView);
-  }
-
-  _renderTripInfo() {
-    render(this._tripInfoContainer, this._tripInfoView, LocationElement.AFTERBEGIN);
-  }
-
-  _renderSorting() {
-    render(this._tripContainer, this._sortingView);
-  }
-
-  _clearEventList() {
-    this._pointPresenter.forEach((presenter) => presenter.destroy());
-    this._pointPresenter.clear();
-  }
-
-  _renderInfoAboutTrip() {
-    if (this._points.length === 0) {
-      this._renderEmptyList();
-    } else {
-      this._renderTripInfo();
-      this._renderSorting();
-      this._renderEventList();
-      this._points.forEach((point) => {
-        const pointPresenter = new PointPresenter(this._eventListView, this._handlePointChange, this._handleModeChange);
-        pointPresenter.init(point);
-        pointPresenter.renderPoint();
-        this._pointPresenter.set(point.id, pointPresenter);
-      });
-    }
-  }
-
 }
