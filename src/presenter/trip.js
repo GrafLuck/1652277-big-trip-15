@@ -3,11 +3,12 @@ import EmptyListView from '@view/empty-list.js';
 import TripInfoView from '@view/trip-info.js';
 import SortingView from '@view/sorting.js';
 
-import PointPresenter from './point.js';
+import PointPresenter from '@presenter/point.js';
 
 import { render } from '@utils/render.js';
-import { LocationElement } from '@/const.js';
-import { updateItem } from './../utils/common.js';
+import { LocationElement, SortType } from '@/const.js';
+import { updateItem } from '@utils/common.js';
+import { sortPointsByDay, sortPointsByPrice, sortPointsByTime } from '@utils/sort.js';
 
 export default class Trip {
   constructor(container, infoContainer, filter) {
@@ -15,6 +16,7 @@ export default class Trip {
     this._infoContainer = infoContainer;
 
     this._filter = filter;
+    this._currentSortType = SortType.DAY;
     this._eventListView = new EventListView();
     this._emptyListView = new EmptyListView(this._filter);
     this._sortingView = new SortingView();
@@ -22,6 +24,7 @@ export default class Trip {
 
     this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortInputChange = this._handleSortInputChange.bind(this);
   }
 
   init(points) {
@@ -44,6 +47,7 @@ export default class Trip {
 
   _renderSorting() {
     render(this._container, this._sortingView);
+    this._sortingView.setSortInputChangeHandler(this._handleSortInputChange);
   }
 
   _renderInfo() {
@@ -67,6 +71,21 @@ export default class Trip {
     this._pointPresenter.clear();
   }
 
+  _sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.DAY:
+        this._points.sort(sortPointsByDay);
+        break;
+      case SortType.PRICE:
+        this._points.sort(sortPointsByPrice);
+        break;
+      case SortType.TIME:
+        this._points.sort(sortPointsByTime);
+        break;
+    }
+    this._currentSortType = sortType;
+  }
+
   _handleModeChange() {
     this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
@@ -74,5 +93,15 @@ export default class Trip {
   _handlePointChange(updatedPoint) {
     this._points = updateItem(this._points, updatedPoint);
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  }
+
+  _handleSortInputChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortPoints(sortType);
+    this._clearEventList();
+    this._renderInfo();
   }
 }
