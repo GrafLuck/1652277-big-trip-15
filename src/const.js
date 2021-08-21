@@ -22,6 +22,12 @@ const Filter = {
   FUTURE: 'Future',
 };
 
+const SortType = {
+  DAY: 'day',
+  PRICE: 'price',
+  TIME: 'time',
+};
+
 const RoutePointOperationMode = {
   VIEW: 'View',
   EDIT: 'Edit',
@@ -45,4 +51,4 @@ const ButtonLabel = {
 
 const QUANTITY_OF_CITIES_IN_TRIP = 3;
 
-export { Time, DateFormat, Filter, RoutePointOperationMode, LocationElement, KeyboardKey, ButtonLabel, QUANTITY_OF_CITIES_IN_TRIP };
+export { Time, DateFormat, Filter, SortType, RoutePointOperationMode, LocationElement, KeyboardKey, ButtonLabel, QUANTITY_OF_CITIES_IN_TRIP };
