@@ -33,7 +33,7 @@ export default class Point {
       this._operationView = new CreationOrEditingEventView(RoutePointOperationMode.EDIT, this._waypoint);
     }
 
-    this._setHandler();
+    this._setHandlers();
 
     if (prevWaypointView === null || prevOperationView === null) {
       render(this._container, this._waypointView);
@@ -67,7 +67,7 @@ export default class Point {
     render(this._container, this._waypointView);
   }
 
-  _setHandler() {
+  _setHandlers() {
     this._waypointView.setRollupButtonClickHandler(this._handleExpandButtonClick);
     this._operationView.setSubmitHandler(this._handleSubmit);
     this._operationView.setRollupButtonClickHandler(this._handleRollupButtonClick);
