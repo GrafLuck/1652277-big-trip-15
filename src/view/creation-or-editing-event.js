@@ -1,7 +1,7 @@
 import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } from '@mock/route-point.js';
 import { formatDate } from '@utils/date.js';
 import { DateFormat, RoutePointOperationMode, ButtonLabel } from '@/const.js';
-import AbstractView from '@view/abstract.js';
+import SmartView from '@view/smart.js';
 
 const blankPoint = {
   basePrice: 0,
@@ -44,7 +44,7 @@ const createDestinationNamesInTemplate = () => {
   const destinationNames = getDestinationNames();
   let list = '';
   for (const name of destinationNames) {
-    list += `<option value="${name}"></option>`;
+    list += `<option value="${name}">${name}</option>`;
   }
   return list;
 };
@@ -97,17 +97,21 @@ const createSectionOfDestinationInTemplate = (destination) => {
     </section>`;
 };
 
-export default class CreationOrEditingEvent extends AbstractView {
+export default class CreationOrEditingEvent extends SmartView {
   constructor(mode = RoutePointOperationMode.CREATE, point = blankPoint) {
     super();
     this._mode = mode;
-    this._point = point;
+    this._data = CreationOrEditingEvent.parsePointToData(point);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
+    this._eventTypeInputChangeHandler = this._eventTypeInputChangeHandler.bind(this);
+    this._eventInputDestinationChangeHandler = this._eventInputDestinationChangeHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   getTemplate() {
-    const { basePrice, dateFrom, dateTo, destination, offers, type } = this._point;
+    const { basePrice, dateFrom, dateTo, destination, offers, type } = this._data;
     const { name } = destination;
     const isEdit = this._mode === RoutePointOperationMode.EDIT;
 
@@ -179,11 +183,45 @@ export default class CreationOrEditingEvent extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.handleFormSubmit(this._point);
+    this._callback.handleFormSubmit(CreationOrEditingEvent.parseDataToPoint(this._data));
   }
 
   _rollupButtonClickHandler() {
     this._callback.handleRollupButtonClick();
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector('.event__type-group').addEventListener('change', this._eventTypeInputChangeHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._eventInputDestinationChangeHandler);
+  }
+
+  _eventTypeInputChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({ type: evt.target.value }, false);
+  }
+
+  _eventInputDestinationChangeHandler(evt) {
+    evt.preventDefault();
+    const destination = Object.assign({}, this._data.destination, { name: evt.target.value });
+    this.updateData(destination, false);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setSubmitHandler(this._callback.handleFormSubmit);
+    this.setRollupButtonClickHandler(this._callback.handleRollupButtonClick);
+  }
+
+  static parsePointToData(point) {
+    return Object.assign(
+      {},
+      point,
+    );
+  }
+
+  static parseDataToPoint(data) {
+    data = Object.assign({}, data);
+    return data;
   }
 }
 
