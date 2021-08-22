@@ -2,6 +2,9 @@ import { getRoutePointTypes, getDestinationNames, getOffers, getDestinations } f
 import { formatDate } from '@utils/date.js';
 import { DateFormat, RoutePointOperationMode, ButtonLabel } from '@/const.js';
 import SmartView from '@view/smart.js';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const blankPoint = {
   basePrice: 0,
@@ -101,13 +104,26 @@ export default class CreationOrEditingEvent extends SmartView {
   constructor(mode = RoutePointOperationMode.CREATE, point = blankPoint) {
     super();
     this._mode = mode;
+    this._dateFromPicker = null;
+    this._dateToPicker = null;
+
     this._data = CreationOrEditingEvent.parsePointToData(point);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
-    this._eventTypeInputChangeHandler = this._eventTypeInputChangeHandler.bind(this);
-    this._eventInputDestinationChangeHandler = this._eventInputDestinationChangeHandler.bind(this);
+    this._typeInputChangeHandler = this._typeInputChangeHandler.bind(this);
+    this._inputDestinationChangeHandler = this._inputDestinationChangeHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
+    this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatePicker();
+  }
+
+  reset(point) {
+    this.updateData(
+      CreationOrEditingEvent.parsePointToData(point),
+    );
   }
 
   getTemplate() {
@@ -191,23 +207,79 @@ export default class CreationOrEditingEvent extends SmartView {
   }
 
   _setInnerHandlers() {
-    this.getElement().querySelector('.event__type-group').addEventListener('change', this._eventTypeInputChangeHandler);
-    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._eventInputDestinationChangeHandler);
+    this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeInputChangeHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._inputDestinationChangeHandler);
+    this.getElement().querySelector('.event__input--price').addEventListener('input', this._priceInputHandler);
   }
 
-  _eventTypeInputChangeHandler(evt) {
+  _setDatePicker() {
+    if (this._dateFromPicker) {
+      this._dateFromPicker.destroy();
+      this._dateFromPicker = null;
+    }
+
+    if (this._dateToPicker) {
+      this._dateToPicker.destroy();
+      this._dateToPicker = null;
+    }
+
+    this._dateFromPicker = flatpickr(
+      this.getElement().querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._data.dateFrom.valueOf(),
+        maxDate: this._data.dateTo.valueOf(),
+        onChange: this._startTimeChangeHandler,
+      },
+    );
+
+    this._dateToPicker = flatpickr(
+      this.getElement().querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._data.dateTo.valueOf(),
+        minDate: this._data.dateFrom.valueOf(),
+        onChange: this._endTimeChangeHandler,
+      },
+    );
+  }
+
+  _typeInputChangeHandler(evt) {
     evt.preventDefault();
     this.updateData({ type: evt.target.value }, false);
   }
 
-  _eventInputDestinationChangeHandler(evt) {
+  _inputDestinationChangeHandler(evt) {
     evt.preventDefault();
-    const destination = Object.assign({}, this._data.destination, { name: evt.target.value });
-    this.updateData(destination, false);
+    const destination = getDestinations().find((element) => element.name === evt.target.value);
+    this._data.destination = Object.assign({}, destination);
+    this.updateElement();
+  }
+
+  _priceInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      basePrice: evt.target.value,
+    }, true);
+  }
+
+  _startTimeChangeHandler([userDate]) {
+    this.updateData({
+      dateFrom: userDate,
+    });
+  }
+
+  _endTimeChangeHandler([userDate]) {
+    this.updateData({
+      dateTo: userDate,
+    });
   }
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatePicker();
     this.setSubmitHandler(this._callback.handleFormSubmit);
     this.setRollupButtonClickHandler(this._callback.handleRollupButtonClick);
   }

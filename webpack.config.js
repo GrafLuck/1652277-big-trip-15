@@ -22,4 +22,12 @@ module.exports = {
       '@presenter': path.resolve(__dirname, 'src/presenter'),
     },
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
 }

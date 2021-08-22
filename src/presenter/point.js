@@ -91,7 +91,8 @@ export default class Point {
     this._closeEditWaypointView(this._escKeydownHandler);
   }
 
-  _handleSubmit() {
+  _handleSubmit(point) {
+    this._changeData(point);
     this._closeEditWaypointView(this._escKeydownHandler);
   }
 
@@ -110,6 +111,7 @@ export default class Point {
   _escKeydownHandler(evt) {
     if (evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESC) {
       evt.preventDefault();
+      this._operationView.reset(this._waypoint);
       this._closeEditWaypointView(this._escKeydownHandler);
     }
   }
