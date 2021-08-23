@@ -60,7 +60,6 @@ export default class Trip {
       this._points.forEach((point) => {
         const pointPresenter = new PointPresenter(this._eventListView, this._handlePointChange, this._handleModeChange);
         pointPresenter.init(point);
-        pointPresenter.renderWaypoint();
         this._pointPresenter.set(point.id, pointPresenter);
       });
     }

@@ -45,7 +45,7 @@ export default class Point {
     }
 
     if (this._mode === RoutePointOperationMode.EDIT) {
-      replace(this._operationView, prevWaypointView);
+      replace(this._operationView, prevOperationView);
     }
 
     remove(prevWaypointView);
@@ -84,7 +84,7 @@ export default class Point {
     replace(this._operationView, this._waypointView);
     document.addEventListener('keydown', this._escKeydownHandler);
     this._changeMode();
-    this._mode = RoutePointOperationMode.EDITING;
+    this._mode = RoutePointOperationMode.EDIT;
   }
 
   _handleRollupButtonClick() {
